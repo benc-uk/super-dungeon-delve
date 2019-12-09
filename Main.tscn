@@ -11,4 +11,8 @@ format = 1
 script = ExtResource( 2 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 46.2614, 40.8789 )
+z_index = 5
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+visible = false
+color = Color( 0.286275, 0.286275, 0.286275, 1 )
