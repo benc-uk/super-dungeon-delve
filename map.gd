@@ -10,7 +10,7 @@ var allRooms: = []
 
 func _ready():
 	rng.randomize()
-
+	
 	# Generate the level
 	var top_zone = LevelGenZone.new(0, 0, MAP_SIZE, MAP_SIZE, 0) 
 	add_child(top_zone)

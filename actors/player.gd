@@ -11,7 +11,29 @@ var _last_dir: = Vector2.ZERO
 
 func _ready():
 	rng.randomize()
-	
+	print("DPI: ", OS.get_screen_dpi(OS.get_current_screen()))
+	$Camera2D.scale.x = OS.get_screen_dpi(OS.get_current_screen()) / 480
+	$Camera2D.scale.y = OS.get_screen_dpi(OS.get_current_screen()) / 480
+
+func _input(event):
+	var xzone = get_viewport_rect().size.x / 3
+	var yzone = get_viewport_rect().size.y / 3
+	if event is InputEventMouseButton:
+		if get_viewport().get_mouse_position().x > xzone*2:
+			Input.action_press("move_right")
+		if get_viewport().get_mouse_position().x < xzone:
+			Input.action_press("move_left")
+		if get_viewport().get_mouse_position().y > yzone*2:
+			Input.action_press("move_down")
+		if get_viewport().get_mouse_position().y < yzone:
+			Input.action_press("move_up")			
+			
+		if not event.pressed:
+			Input.action_release("move_right")
+			Input.action_release("move_left")
+			Input.action_release("move_up")
+			Input.action_release("move_down")
+						
 func _physics_process(delta: float):
 	time += delta
 	if time > 500000: time = 0

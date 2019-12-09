@@ -16,3 +16,34 @@ z_index = 5
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 visible = false
 color = Color( 0.286275, 0.286275, 0.286275, 1 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+visible = false
+show_behind_parent = true
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 628.519
+margin_top = -595.63
+margin_right = 700.519
+margin_bottom = -581.63
+grow_horizontal = 2
+rect_scale = Vector2( 3, 3 )
+size_flags_vertical = 1
+text = "DPI"
+align = 2
+max_lines_visible = 1
+
+[node name="Label2" type="Label" parent="CanvasLayer"]
+show_behind_parent = true
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 9.25986
+margin_top = -32.4094
+margin_right = 56.2599
+margin_bottom = -18.4094
+rect_scale = Vector2( 2, 2 )
+size_flags_vertical = 1
+text = "v0.0.01"
+max_lines_visible = 1
