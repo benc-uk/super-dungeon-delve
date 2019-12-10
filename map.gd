@@ -1,6 +1,7 @@
 extends TileMap
 
 const MAP_SIZE = 48
+const GRID_SIZE = 16
 const MAX_DEPTH = 4
 const SPLIT_PERC = 30
 const TILE_IDX_UNSET = -1
@@ -20,7 +21,7 @@ func _ready():
 	top_zone.make_corridor()
 	# Add pillars to each room, maybe
 	for room in all_rooms:
-		add_pillars(room)
+		_add_pillars(room)
 
 	# Set player start room & location
 	all_rooms.shuffle()
@@ -29,12 +30,37 @@ func _ready():
 	var py = (start_room["top"] + floor(start_room["height"] / 2))	
 	while true:
 		if get_cell(px, py) == TILE_IDX_FLOOR: break
+		# Keep trying to the right
 		px += 1
-	
-	$Player.position.x = px * 16
-	$Player.position.y = py * 16
+	$Player.position.x = px * GRID_SIZE
+	$Player.position.y = py * GRID_SIZE
 	
 	# Draw walls on edges of rooms
+	_add_walls()
+					
+																			
+func fill_cells(left, top, width, height, tile_idx, tile_coords):
+	for y in range(top, top + height):
+		for x in range(left, left + width):
+			set_cell(x, y, tile_idx, false, false, false, tile_coords)
+
+
+func fill_cells_floor(left, top, width, height):
+	for y in range(top, top + height):
+		for x in range(left, left + width):
+			set_cell(x, y, TILE_IDX_FLOOR, false, false, false, Vector2(rng.randi_range(0, 3), rng.randi_range(0, 2)))
+		
+			
+func _add_pillars(room):
+	if room.width * room.height > 15 and room.width > 4 and room.height > 4:
+		var deco_count: = rng.randi_range(3, 8)
+		for p in range(deco_count):
+			var pillarLeft: = rng.randi_range(1, room.width - 3)
+			var pillarTop: = rng.randi_range(1, room.height - 3)
+			fill_cells(room.left + pillarLeft, room.top + pillarTop, 2, 2, -1, Vector2.ZERO)	
+
+
+func _add_walls():
 	for y in range(-1, MAP_SIZE+1):
 		for x in range(-1, MAP_SIZE+1): 
 			if get_cell(x, y) == TILE_IDX_UNSET:
@@ -49,8 +75,8 @@ func _ready():
 				# Cardinal directions
 				if get_cell(x, y+1) == TILE_IDX_FLOOR:
 					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(rng.randi_range(1, 4), 0))
-					if rng.randf() > 0.8:
-						add_torch(x, y)
+					if rng.randf() <= 0.2:
+						_add_torch(x, y)
 					continue
 				if get_cell(x, y-1) == TILE_IDX_FLOOR:
 					# "north" walls are a special case due to fake perspective
@@ -81,35 +107,9 @@ func _ready():
 				if get_cell(x-1, y+1) == TILE_IDX_FLOOR:
 					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(5, 0))
 					continue
-					
-																			
-func fill_cells(left, top, width, height, tile_idx, tile_coords):
-	for y in range(top, top + height):
-		for x in range(left, left + width):
-			set_cell(x, y, tile_idx, false, false, false, tile_coords)
-
-
-func fill_cells_floor(left, top, width, height):
-	for y in range(top, top + height):
-		for x in range(left, left + width):
-			set_cell(x, y, TILE_IDX_FLOOR, false, false, false, get_floor_tile())
-		
 			
-func get_floor_tile() -> Vector2:
-	return Vector2(rng.randi_range(0, 3), rng.randi_range(0, 2))
-	
-	
-func add_pillars(room):
-	if room.width * room.height > 15 and room.width > 4 and room.height > 4:
-		var deco_count: = rng.randi_range(3, 8)
-		for p in range(deco_count):
-			var pillarLeft: = rng.randi_range(1, room.width - 3)
-			var pillarTop: = rng.randi_range(1, room.height - 3)
-			fill_cells(room.left + pillarLeft, room.top + pillarTop, 2, 2, -1, Vector2.ZERO)	
-	
-			
-func add_torch(x, y):
+func _add_torch(x, y):
 	var torch_node: Node2D = TORCH_SCENE.instance()
-	torch_node.position.x = x * 16
-	torch_node.position.y = y * 16
+	torch_node.position.x = x * GRID_SIZE
+	torch_node.position.y = y * GRID_SIZE
 	add_child(torch_node)

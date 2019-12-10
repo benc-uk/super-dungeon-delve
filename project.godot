@@ -25,6 +25,11 @@ run/main_scene="res://Main.tscn"
 boot_splash/image="res://assets/splash/splash.png"
 config/icon="res://icon.png"
 
+[debug]
+
+gdscript/warnings/unassigned_variable=false
+gdscript/warnings/unused_variable=false
+
 [input]
 
 move_up={

@@ -61,7 +61,7 @@ func _physics_process(delta: float):
 	#if _speed.x < 0.0001 and _speed.y < 0.0001: _speed = Vector2.ZERO
 	
 	# No momentum 		
-	var direction = get_direction()
+	var direction = _get_direction()
 	_speed = base_speed
 	
 	if direction.x < 0: $Sprite.flip_h = true
@@ -69,15 +69,15 @@ func _physics_process(delta: float):
 	
 	_velocity = move_and_slide(direction * _speed)
 	if _velocity.x > 0 or _velocity.y > 0 or _velocity.x < 0 or _velocity.y < 0:
-		$Sprite.play()
+		$Sprite.play("walk")
 	else:
-	  $Sprite.stop()
-		
+		$Sprite.play("idle")
+				
 	# light flicker		
 	$Light2D.texture_scale = light_size + (cos(time * 9) * 0.005)
 	$Light2D.energy = light_brightness + (cos(time * 2) * 0.2)
 	
-func get_direction() -> Vector2:
+func _get_direction() -> Vector2:
 	return Vector2(
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
@@ -92,6 +92,7 @@ func _on_LightTimer_timeout():
 
 
 func _on_Sprite_frame_changed():
-	$SfxFootstep.volume_db = rng.randf_range(-10.0, 1.0)
-	$SfxFootstep.pitch_scale = rng.randf_range(0.7, 1.3)
-	$SfxFootstep.play(0.0)
+	if $Sprite.animation == "walk":
+		$SfxFootstep.volume_db = rng.randf_range(-10.0, 1.0)
+		$SfxFootstep.pitch_scale = rng.randf_range(0.7, 1.3)
+		$SfxFootstep.play(0.0)
