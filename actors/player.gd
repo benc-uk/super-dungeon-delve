@@ -11,14 +11,20 @@ var _last_dir: = Vector2.ZERO
 
 func _ready():
 	rng.randomize()
-	print("DPI: ", OS.get_screen_dpi(OS.get_current_screen()))
-	$Camera2D.scale.x = OS.get_screen_dpi(OS.get_current_screen()) / 480
-	$Camera2D.scale.y = OS.get_screen_dpi(OS.get_current_screen()) / 480
+	var zoom_factor = OS.get_screen_dpi(OS.get_current_screen()) / 480.0
+	print("zoom_factor: ", zoom_factor)
+	$Camera2D.zoom = Vector2(zoom_factor, zoom_factor)
 
 func _input(event):
 	var xzone = get_viewport_rect().size.x / 3
 	var yzone = get_viewport_rect().size.y / 3
+
 	if event is InputEventMouseButton:
+		#if event.button_index == 5:
+		#	$Camera2D.zoom = Vector2($Camera2D.zoom.x * 0.9, $Camera2D.zoom.y * 0.9)
+		#if event.button_index == 4:
+		#	$Camera2D.zoom = Vector2($Camera2D.zoom.x * 1.1, $Camera2D.zoom.y * 1.1)
+		
 		if get_viewport().get_mouse_position().x > xzone*2:
 			Input.action_press("move_right")
 		if get_viewport().get_mouse_position().x < xzone:

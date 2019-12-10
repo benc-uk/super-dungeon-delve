@@ -35,7 +35,7 @@ func _ready():
 									
 				# Cardinal directions
 				if get_cell(x, y+1) == TILE_IDX_FLOOR:
-					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(1, 0))
+					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(rng.randi_range(1, 4), 0))
 					continue
 				if get_cell(x, y-1) == TILE_IDX_FLOOR:
 					# "north" walls are a special case due to fake perspective
@@ -44,13 +44,13 @@ func _ready():
 					elif get_cell(x+1, y) == TILE_IDX_FLOOR:
 						set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(5, 5))						
 					else:
-						set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(1, 4))
+						set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(rng.randi_range(1, 4), 4))
 					continue
 				if get_cell(x+1, y) == TILE_IDX_FLOOR:
-					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(0, 0))
+					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(0, rng.randi_range(0, 3)))
 					continue
 				if get_cell(x-1, y) == TILE_IDX_FLOOR:
-					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(5, 0))
+					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(5, rng.randi_range(0, 3)))
 					continue		
 									
 				# Diagonals		
