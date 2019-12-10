@@ -64,8 +64,13 @@ func _physics_process(delta: float):
 	if direction.x < 0: $Sprite.flip_h = true
 	if direction.x > 0: $Sprite.flip_h = false
 	
+		
 	_velocity = move_and_slide(direction * _speed, Vector2.UP, false, 4, 0.78, false)
-	
+	if _velocity.x > 0 or _velocity.y > 0 or _velocity.x < 0 or _velocity.y < 0:
+		$Sprite.play()
+	else:
+	  $Sprite.stop()
+		
 	# light flicker		
 	$Light2D.texture_scale = 0.19 + (cos(time * 9) * 0.005)
 	$Light2D.energy = 2.8 + (cos(time * 2) * 0.1)

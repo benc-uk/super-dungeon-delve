@@ -5,8 +5,13 @@
 [ext_resource path="res://actors/Player.tscn" type="PackedScene" id=3]
 
 [node name="Map" type="TileMap"]
+position = Vector2( -1, 0 )
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
+collision_use_kinematic = true
+collision_friction = 0.0
+collision_bounce = 0.8
+collision_mask = 0
 format = 1
 script = ExtResource( 2 )
 

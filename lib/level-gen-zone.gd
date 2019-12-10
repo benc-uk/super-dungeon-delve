@@ -53,13 +53,13 @@ func _ready():
 func _make_room():
 	var roomWidth = rng.randi_range(floor(width / 2), max(2, width - 2))
 	var roomHeight = rng.randi_range(floor(height / 2), max(2, height - 2))
-	var roomX = left + rng.randi_range(1, max(1, width - roomWidth - 1))
-	var roomY = top + rng.randi_range(1, max(1, height - roomHeight - 1))
+	var roomLeft = left + rng.randi_range(1, max(1, width - roomWidth - 1))
+	var roomTop = top + rng.randi_range(1, max(1, height - roomHeight - 1))
 	#print(" New room %s: left:%s, top:%s, width:%s, height:%s" % [depth, roomX, roomY, roomWidth, roomHeight])
 	if roomWidth < 1 or roomWidth < 1:
 		return
-	map.fill_cells_floor(roomX, roomY, roomWidth, roomHeight)
-	map.allRooms.push_front({"left":roomX, "top":roomY, "width":roomWidth, "height":roomHeight})
+	map.fill_cells_floor(roomLeft, roomTop, roomWidth, roomHeight)
+	map.all_rooms.push_front({"left":roomLeft, "top":roomTop, "width":roomWidth, "height":roomHeight})
 
 
 func make_corridor():
