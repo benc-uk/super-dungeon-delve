@@ -16,9 +16,11 @@ func _ready():
 	# Generate the level
 	var top_zone = LevelGenZone.new(0, 0, MAP_SIZE, MAP_SIZE, 0) 
 	add_child(top_zone)
+	# Corridors after but before pillars
 	top_zone.make_corridor()
+	# Add pillars to each room, maybe
 	for room in all_rooms:
-		deco_room(room)
+		add_pillars(room)
 
 	# Set player start room & location
 	all_rooms.shuffle()
@@ -86,21 +88,25 @@ func fill_cells(left, top, width, height, tile_idx, tile_coords):
 		for x in range(left, left + width):
 			set_cell(x, y, tile_idx, false, false, false, tile_coords)
 
+
 func fill_cells_floor(left, top, width, height):
 	for y in range(top, top + height):
 		for x in range(left, left + width):
 			set_cell(x, y, TILE_IDX_FLOOR, false, false, false, get_floor_tile())
+		
 			
 func get_floor_tile() -> Vector2:
 	return Vector2(rng.randi_range(0, 3), rng.randi_range(0, 2))
 	
-func deco_room(room):
-	var deco_count = rng.randi_range(3, 8)
+	
+func add_pillars(room):
 	if room.width * room.height > 15 and room.width > 4 and room.height > 4:
+		var deco_count: = rng.randi_range(3, 8)
 		for p in range(deco_count):
 			var pillarLeft: = rng.randi_range(1, room.width - 3)
 			var pillarTop: = rng.randi_range(1, room.height - 3)
 			fill_cells(room.left + pillarLeft, room.top + pillarTop, 2, 2, -1, Vector2.ZERO)	
+	
 			
 func add_torch(x, y):
 	var torch_node: Node2D = TORCH_SCENE.instance()

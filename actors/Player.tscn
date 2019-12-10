@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://actors/player.gd" type="Script" id=1]
 [ext_resource path="res://assets/player_1.png" type="Texture" id=2]
 [ext_resource path="res://assets/player_2.png" type="Texture" id=3]
 [ext_resource path="res://assets/light.png" type="Texture" id=4]
+[ext_resource path="res://assets/sfx/footstep.wav" type="AudioStream" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 6, 5 )
@@ -13,7 +14,7 @@ animations = [ {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
 "loop": true,
 "name": "default",
-"speed": 5.0
+"speed": 4.0
 } ]
 
 [node name="Player" type="KinematicBody2D"]
@@ -42,7 +43,6 @@ position = Vector2( 10, 8 )
 texture = ExtResource( 4 )
 texture_scale = 0.2
 color = Color( 0.960784, 0.933333, 0.270588, 1 )
-mode = 2
 range_z_min = 0
 range_z_max = 9
 shadow_enabled = true
@@ -52,4 +52,10 @@ wait_time = 0.8
 autostart = true
 
 [node name="Tween" type="Tween" parent="Light2D"]
+
+[node name="SfxFootstep" type="AudioStreamPlayer2D" parent="."]
+position = Vector2( 0, 1 )
+stream = ExtResource( 5 )
+bus = "Reverb"
+[connection signal="frame_changed" from="Sprite" to="." method="_on_Sprite_frame_changed"]
 [connection signal="timeout" from="Light2D/LightTimer" to="." method="_on_LightTimer_timeout"]

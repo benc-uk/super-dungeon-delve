@@ -22,6 +22,7 @@ _global_script_class_icons={
 
 config/name="Dungeon"
 run/main_scene="res://Main.tscn"
+boot_splash/image="res://assets/splash/splash.png"
 config/icon="res://icon.png"
 
 [input]

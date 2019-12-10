@@ -34,5 +34,7 @@ margin_right = 56.2599
 margin_bottom = -18.4094
 rect_scale = Vector2( 2, 2 )
 size_flags_vertical = 1
-text = "v0.0.02"
+text = "v0.0.03"
 max_lines_visible = 1
+
+[node name="Area2D" type="Area2D" parent="."]
