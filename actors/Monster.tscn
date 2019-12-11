@@ -1,0 +1,34 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://actors/monster.gd" type="Script" id=1]
+[ext_resource path="res://assets/sprites/monsters/skeleton_v2_1.png" type="Texture" id=2]
+[ext_resource path="res://assets/sprites/monsters/skeleton_v2_2.png" type="Texture" id=3]
+[ext_resource path="res://assets/sprites/monsters/skeleton_v2_3.png" type="Texture" id=4]
+[ext_resource path="res://assets/sprites/monsters/skeleton_v2_4.png" type="Texture" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 7, 5 )
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="Monster" type="KinematicBody2D"]
+collision_layer = 4
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 7, 10 )
+shape = SubResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+light_mask = 0
+position = Vector2( 8, 8 )
+z_index = 3
+frames = SubResource( 2 )
+frame = 3
+playing = true

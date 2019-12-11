@@ -1,30 +1,31 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://lib/dungeon-tiles.tres" type="TileSet" id=1]
-[ext_resource path="res://map.gd" type="Script" id=2]
-[ext_resource path="res://actors/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://main.gd" type="Script" id=1]
+[ext_resource path="res://lib/dungeon-tiles.tres" type="TileSet" id=2]
+[ext_resource path="res://map.gd" type="Script" id=3]
+[ext_resource path="res://theme.tres" type="Theme" id=4]
 
-[node name="Map" type="TileMap"]
+[node name="Main" type="Node"]
+script = ExtResource( 1 )
+
+[node name="Map" type="TileMap" parent="."]
 position = Vector2( -1, 0 )
-tile_set = ExtResource( 1 )
+tile_set = ExtResource( 2 )
 cell_size = Vector2( 16, 16 )
 collision_use_kinematic = true
 collision_friction = 0.0
 collision_bounce = 0.8
 collision_mask = 0
 format = 1
-script = ExtResource( 2 )
+script = ExtResource( 3 )
 
-[node name="Player" parent="." instance=ExtResource( 3 )]
-z_index = 5
-
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="Map"]
 visible = false
 color = Color( 0.0431373, 0.0431373, 0.0431373, 1 )
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="VersionLabel" type="Label" parent="CanvasLayer"]
+[node name="VersionLabel" type="Label" parent="HUD"]
 show_behind_parent = true
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -34,5 +35,13 @@ margin_right = 56.2599
 margin_bottom = -18.4094
 rect_scale = Vector2( 2, 2 )
 size_flags_vertical = 1
+theme = ExtResource( 4 )
 text = "v0.0.03"
 max_lines_visible = 1
+
+[node name="HealthBar" type="ProgressBar" parent="HUD"]
+margin_right = 234.0
+margin_bottom = 35.0
+theme = ExtResource( 4 )
+value = 100.0
+rounded = true

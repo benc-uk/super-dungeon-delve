@@ -21,7 +21,7 @@ func _init(l: float, t: float, w: float, h: float, d: int):
 
 
 func _ready():
-	map = $"/root/Map"
+	map = $"/root/Main/Map"
 	#print("New zone %s: left:%s, top:%s, width:%s, height:%s" % [depth, left, top, width, height])
 	if depth < map.MAX_DEPTH and width > 0 and height > 0:
 		var halfW = ceil(width / 2)

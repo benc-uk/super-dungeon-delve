@@ -1,13 +1,12 @@
 extends TileMap
 
 const MAP_SIZE = 48
-const GRID_SIZE = 16
 const MAX_DEPTH = 4
 const SPLIT_PERC = 30
 const TILE_IDX_UNSET = -1
 const TILE_IDX_WALL = 0
 const TILE_IDX_FLOOR = 1
-const TORCH_SCENE = preload("res://actors/Torch.tscn")
+
 var rng: = RandomNumberGenerator.new()
 var all_rooms: = []
 
@@ -16,29 +15,16 @@ func _ready():
 	
 	# Generate the level
 	var top_zone = LevelGenZone.new(0, 0, MAP_SIZE, MAP_SIZE, 0) 
+	# We need to add the zone to the tree so it can access the map node
 	add_child(top_zone)
-	# Corridors after but before pillars
+	# Corridors after room generation but before pillars
 	top_zone.make_corridor()
 	# Add pillars to each room, maybe
 	for room in all_rooms:
 		_add_pillars(room)
-
-	# Set player start room & location
-	all_rooms.shuffle()
-	var start_room = all_rooms[0]
-	var px = (start_room["left"] + floor(start_room["width"] / 2))
-	var py = (start_room["top"] + floor(start_room["height"] / 2))	
-	while true:
-		if get_cell(px, py) == TILE_IDX_FLOOR: break
-		# Keep trying to the right
-		px += 1
-	$Player.position.x = px * GRID_SIZE
-	$Player.position.y = py * GRID_SIZE
-	
-	# Draw walls on edges of rooms
 	_add_walls()
-					
-																			
+
+
 func fill_cells(left, top, width, height, tile_idx, tile_coords):
 	for y in range(top, top + height):
 		for x in range(left, left + width):
@@ -109,7 +95,15 @@ func _add_walls():
 					continue
 			
 func _add_torch(x, y):
-	var torch_node: Node2D = TORCH_SCENE.instance()
-	torch_node.position.x = x * GRID_SIZE
-	torch_node.position.y = y * GRID_SIZE
+	var torch_node: Node2D = preload("res://actors/Torch.tscn").instance()
+	torch_node.position.x = x * $"/root/Main".GRID_SIZE
+	torch_node.position.y = y * $"/root/Main".GRID_SIZE
 	add_child(torch_node)
+
+func get_random_floor_cell(left, top, width, height):
+	var cells = []
+	for y in range(top, top + height):
+		for x in range(left, left + width):
+			if get_cell(x, y) == TILE_IDX_FLOOR: cells.push_back({"x": x, "y": y})
+	return cells[rng.randi_range(0, cells.size()-1)]
+	
