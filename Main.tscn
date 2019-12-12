@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
-[ext_resource path="res://lib/dungeon-tiles.tres" type="TileSet" id=2]
+[ext_resource path="res://resources/dungeon-tiles.tres" type="TileSet" id=2]
 [ext_resource path="res://map.gd" type="Script" id=3]
 [ext_resource path="res://theme.tres" type="Theme" id=4]
 
@@ -29,10 +29,10 @@ color = Color( 0.0431373, 0.0431373, 0.0431373, 1 )
 show_behind_parent = true
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 9.25986
-margin_top = -32.4094
-margin_right = 56.2599
-margin_bottom = -18.4094
+margin_left = 6.19472
+margin_top = -50.8003
+margin_right = 58.1947
+margin_bottom = -26.8003
 rect_scale = Vector2( 2, 2 )
 size_flags_vertical = 1
 theme = ExtResource( 4 )

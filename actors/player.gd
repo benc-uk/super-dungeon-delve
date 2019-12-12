@@ -4,16 +4,18 @@ var _time:= 0.0
 var rng: = RandomNumberGenerator.new()
 var _light_old_pos = Vector2(8, 8)
 var _velocity: = Vector2.ZERO
-var _speed = Vector2.ZERO
+#var _speed = Vector2.ZERO
 var _last_dir: = Vector2(1.0, 0.0)
 var _recoil_time = 0.0
 var _recoil_dir = Vector2.ZERO
+var _attack_cooldown = 0.0
 
-export var base_speed = Vector2(120, 120)
+export var base_speed = Vector2(100, 100)
 export var light_size = 0.19
 export var light_brightness = 2.4
-var health = 100
-var attack_cooldown = 0.0
+export var health = 100
+
+export var attack_cooldown_time = 0.5
 
 const SCENE_WEAPON: = preload("res://actors/Weapon.tscn")
 
@@ -50,68 +52,69 @@ func _input(event):
 						
 func _physics_process(delta: float):
 	_time += delta
-	attack_cooldown -= delta
+	_attack_cooldown -= delta
 	wrapf(_time, 0, 864000)
-	
-	# Momentum code, not sure I like it
-	#if Input.is_action_pressed("move_left"): _speed = base_speed
-	#if Input.is_action_pressed("move_right"): _speed = base_speed
-	#if Input.is_action_pressed("move_up"): _speed = base_speed
-	#if Input.is_action_pressed("move_down"): _speed = base_speed
-	#var direction = get_direction()
-	#if direction.x == 0 and direction.y == 0: 
-	#	direction = _last_dir
-	#else:
-	#	_last_dir = direction
-	#_speed *= 0.8
-	#if _speed.x < 0.0001 and _speed.y < 0.0001: _speed = Vector2.ZERO
-	
-	# No momentum 		
+
 	var direction = _get_direction()
-	if _recoil_time > 0.01:
-		direction = _recoil_dir
-		_recoil_time *= 0.6
-		
-	#if direction.x != 0 or direction.y != 0: 
-	#	_last_dir = direction
-	_speed = base_speed
-	
-	if direction.x != 0 or direction.y != 0:
-		_last_dir = direction
 		
 	$Sprite.flip_h = true if _last_dir.x < 0 else false
-	_velocity = direction  * _speed 
+	_velocity = direction  * base_speed 
 	_velocity = move_and_slide(_velocity)
 	for i in get_slide_count():
 		var collision: = get_slide_collision(i)
 		if collision:
 			if collision.collider.get_filename() == "res://actors/Monster.tscn":
 				_take_damage(collision)
-			
-	if direction.x > 0 or direction.y > 0 or direction.x < 0 or direction.y < 0:
-		$Sprite.play("walk")
-	else:
-		$Sprite.play("idle")
-				
-	# light flicker		
+
+	# Light flicker		
 	$Light2D.texture_scale = light_size + (cos(_time * 9) * 0.005)
 	$Light2D.energy = light_brightness + (cos(_time * 2) * 0.2)
 
-
-	if Input.is_action_pressed("attack") and attack_cooldown <= 0.001:
+	# Attack
+	if Input.is_action_pressed("attack") and _attack_cooldown <= 0.001:
 		var weapon: = SCENE_WEAPON.instance()
-		weapon.get_node("Sprite").flip_h = true if _last_dir.x < 0 else false
-		weapon.position.x = 16 * _last_dir.x
-		weapon.position.y = 0
+		
+		if _last_dir.x > 0:
+			weapon.rot = 90
+			weapon.position.x = 8
+			weapon.position.y = 16
+		elif _last_dir.x < 0:
+			weapon.rot = -90
+			weapon.position.x = 8
+			weapon.position.y = 16
+		elif _last_dir.y > 0:
+			weapon.rot = 180
+			weapon.position.x = 8
+			weapon.position.y = 16
+			weapon.z_index = 11
+		elif _last_dir.y < 0:
+			weapon.rot = 0
+			weapon.position.x = 8
+			weapon.position.y = 12
+
 		add_child(weapon)
-		attack_cooldown = 0.6
+		_attack_cooldown = attack_cooldown_time
 
 func _get_direction() -> Vector2:
-	return Vector2(
+	var new_dir: = Vector2(
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
 	)
 	
+	if _recoil_time > 0.01:
+		$Sprite.play("hit")
+		_recoil_time *= 0.6
+		new_dir = _recoil_dir
+		
+	if new_dir.x != 0 or new_dir.y != 0:
+		_last_dir = new_dir	
+		
+	if new_dir.x > 0 or new_dir.y > 0 or new_dir.x < 0 or new_dir.y < 0:
+		if _recoil_time < 0.01: $Sprite.play("walk")
+	else:
+		$Sprite.play("idle")
+				
+	return new_dir
 
 func _on_Sprite_frame_changed():
 	if $Sprite.animation == "walk":
@@ -133,11 +136,12 @@ func _take_damage(collision: KinematicCollision2D):
 	$SfxPain.pitch_scale = rng.randf_range(0.7, 1.3)
 	$SfxPain.play(0.0)	
 
-	health -= 5 + (randi() % 25)
+	health -= 5 + (randi() % 10)
 	if health <= 0:
 		get_tree().change_scene("res://GameOver.tscn")	
 
 	_recoil_dir = collision.normal
 	_recoil_time = 0.8
 
+	$Sprite.play("hit")
 	$"/root/Main/HUD/HealthBar".value = health	

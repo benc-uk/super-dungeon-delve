@@ -5,7 +5,7 @@ const GRID_SIZE = 16
 
 func _ready():
 	var all_rooms = $Map.all_rooms
-	player = preload("res://actors/Player.tscn").instance()
+	player = load("res://actors/Player.tscn").instance()
 	
 	# Add player
 	var start_room = $Map.all_rooms[randi() % len($Map.all_rooms)]
@@ -16,8 +16,10 @@ func _ready():
 	
 	# Add monsters
 	for room in $Map.all_rooms:
-		for mi in range(5):
-			if randf() > 0.5:
+		# Monster spawn ammount is factored on room size
+		for mi in range(room.width * room.height):
+			# 50% chance
+			if randf() <= 0.04:
 				var m = preload("res://actors/Monster.tscn").instance()
 				var m_cell = $Map.get_random_floor_cell(room["left"], room["top"], room["width"], room["height"])
 				m.position.x = m_cell.x * 16

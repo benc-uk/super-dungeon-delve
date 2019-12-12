@@ -2,7 +2,7 @@
 
 [ext_resource path="res://main-menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/splash/splash.png" type="Texture" id=2]
-[ext_resource path="res://font.tres" type="DynamicFont" id=3]
+[ext_resource path="res://resources/font.tres" type="DynamicFont" id=3]
 
 [sub_resource type="InputEventAction" id=1]
 action = "ui_accept"

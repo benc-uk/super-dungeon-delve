@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://actors/monster.gd" type="Script" id=1]
-[ext_resource path="res://assets/sprites/monsters/skeleton_v2_1.png" type="Texture" id=2]
-[ext_resource path="res://assets/sprites/monsters/skeleton_v2_2.png" type="Texture" id=3]
-[ext_resource path="res://assets/sprites/monsters/skeleton_v2_3.png" type="Texture" id=4]
-[ext_resource path="res://assets/sprites/monsters/skeleton_v2_4.png" type="Texture" id=5]
+[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f0.png" type="Texture" id=2]
+[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f1.png" type="Texture" id=3]
+[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f2.png" type="Texture" id=4]
+[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f3.png" type="Texture" id=5]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f1.png" type="Texture" id=6]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f2.png" type="Texture" id=7]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f3.png" type="Texture" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 5 )
@@ -13,16 +16,37 @@ extents = Vector2( 7, 5 )
 animations = [ {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
-"name": "default",
+"name": "skel",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "slime",
 "speed": 5.0
 } ]
+
+[sub_resource type="Animation" id=3]
+resource_name = "death"
+length = 0.35
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.35 ),
+"transitions": PoolRealArray( 0.297302, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0.1, 0.1 ) ]
+}
 
 [node name="Monster" type="KinematicBody2D"]
 collision_layer = 4
 script = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 7, 10 )
+position = Vector2( 8, 11 )
 shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
@@ -30,5 +54,11 @@ light_mask = 0
 position = Vector2( 8, 8 )
 z_index = 3
 frames = SubResource( 2 )
-frame = 3
+animation = "skel"
+frame = 1
 playing = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_process_mode = 0
+anims/death = SubResource( 3 )
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
