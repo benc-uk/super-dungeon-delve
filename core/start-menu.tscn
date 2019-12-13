@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://core/main-menu.gd" type="Script" id=1]
+[ext_resource path="res://assets/splash/splash.png" type="Texture" id=2]
+[ext_resource path="res://resources/font.tres" type="DynamicFont" id=3]
+
+
+[sub_resource type="InputEventAction" id=1]
+action = "ui_accept"
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="splash" type="TextureRect" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+rect_scale = Vector2( 0.536249, 0.560852 )
+texture = ExtResource( 2 )
+
+[node name="StartButton" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -111.0
+margin_top = 187.0
+margin_right = 121.0
+margin_bottom = 253.0
+custom_fonts/font = ExtResource( 3 )
+shortcut = SubResource( 2 )
+text = "Enter!"
+flat = true
+[connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]
