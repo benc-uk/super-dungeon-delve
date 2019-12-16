@@ -5,4 +5,7 @@ font_path = "res://assets/fonts/LifeCraft_Font.ttf"
 
 [resource]
 size = 60
+outline_size = 6
+outline_color = Color( 0, 0, 0, 0.52549 )
+extra_spacing_top = 5
 font_data = SubResource( 1 )

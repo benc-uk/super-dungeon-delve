@@ -13,22 +13,46 @@ _global_script_classes=[ {
 "class": "LevelGenZone",
 "language": "GDScript",
 "path": "res://lib/level-gen-zone.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Monster",
+"language": "GDScript",
+"path": "res://entities/monster.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Player",
+"language": "GDScript",
+"path": "res://entities/player.gd"
 } ]
 _global_script_class_icons={
-"LevelGenZone": ""
+"LevelGenZone": "",
+"Monster": "",
+"Player": ""
 }
 
 [application]
 
 config/name="Dungeon"
-run/main_scene="res://core/main.tscn"
-boot_splash/image="res://assets/splash/splash.png"
+run/main_scene="res://core/start-menu.tscn"
+boot_splash/image="res://assets/splash/boot.png"
+boot_splash/fullsize=false
 config/icon="res://assets/icon.png"
+
+[autoload]
+
+globals="*res://core/globals.gd"
 
 [debug]
 
 gdscript/warnings/unassigned_variable=false
 gdscript/warnings/unused_variable=false
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
 
 [input]
 
@@ -66,6 +90,11 @@ attack={
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777238,"unicode":0,"echo":false,"script":null)
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":32,"unicode":0,"echo":false,"script":null)
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":0,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+test={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":39,"unicode":0,"echo":false,"script":null)
  ]
 }
 

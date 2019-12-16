@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://resources/dungeon-tiles.tres" type="TileSet" id=1]
+[ext_resource path="res://core/map.gd" type="Script" id=2]
+
+[node name="Map" type="TileMap"]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 16, 16 )
+collision_use_kinematic = true
+collision_friction = 0.0
+collision_bounce = 0.8
+collision_mask = 0
+format = 1
+script = ExtResource( 2 )

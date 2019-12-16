@@ -1,28 +1,28 @@
 extends KinematicBody2D
+class_name Player
 
 var _time:= 0.0
-var rng: = RandomNumberGenerator.new()
 var _light_old_pos = Vector2(8, 8)
 var _velocity: = Vector2.ZERO
-#var _speed = Vector2.ZERO
 var _last_dir: = Vector2(1.0, 0.0)
 var _recoil_time = 0.0
 var _recoil_dir = Vector2.ZERO
 var _attack_cooldown = 0.0
+var rng: = RandomNumberGenerator.new()
 
 export var base_speed = Vector2(100, 100)
 export var light_size = 0.19
 export var light_brightness = 2.4
 export var health = 100
-
 export var attack_cooldown_time = 0.5
+export var weapon_damage = 10.0
 
 const SCENE_WEAPON: = preload("res://entities/weapon.tscn")
 
 func _ready():
 	rng.randomize()
 	var zoom_factor = OS.get_screen_dpi(OS.get_current_screen()) / 480.0
-	print("zoom_factor: ", zoom_factor)
+	#print("zoom_factor: ", zoom_factor)
 	$Camera2D.zoom = Vector2(zoom_factor, zoom_factor)
 
 func _input(event):
@@ -51,6 +51,9 @@ func _input(event):
 			Input.action_release("move_down")
 						
 func _physics_process(delta: float):
+	#if Input.is_action_just_pressed("test"):
+	#	$"/root/Main".next_level()
+		
 	_time += delta
 	_attack_cooldown -= delta
 	wrapf(_time, 0, 864000)
@@ -63,8 +66,19 @@ func _physics_process(delta: float):
 	for i in get_slide_count():
 		var collision: = get_slide_collision(i)
 		if collision:
-			if collision.collider.get_filename() == "res://entities/monster.tscn":
+			# Hit a monster
+			if collision.collider.get_filename().find("monster") > 0:
 				_take_damage(collision)
+				
+			# Hit the exit
+			if collision.collider.get_filename().find("exit") > 0:
+				collision.collider.queue_free()
+				$"/root/Main".next_level()
+				
+			# Hit a potion
+			#print(collision.collider.get_groups())
+			if collision.collider.get_filename().find("potion") > 0:
+				_heal(10 + randi() % 10, collision)
 
 	# Light flicker		
 	$Light2D.texture_scale = light_size + (cos(_time * 9) * 0.005)
@@ -73,6 +87,9 @@ func _physics_process(delta: float):
 	# Attack
 	if Input.is_action_pressed("attack") and _attack_cooldown <= 0.001:
 		var weapon: = SCENE_WEAPON.instance()
+		
+		$SfxSwipe.pitch_scale = rng.randf_range(0.9, 1.8)
+		$SfxSwipe.play(0.0)
 		
 		if _last_dir.x > 0:
 			weapon.rot = 90
@@ -124,7 +141,7 @@ func _on_Sprite_frame_changed():
 
 
 func _on_LightTimer_timeout():
-	var light_new_pos = Vector2(rand_range(4, 12), rand_range(4, 12))
+	var light_new_pos = Vector2(rand_range(4, 12), rand_range(8, 16))
 	$Light2D/Tween.interpolate_property($Light2D, "position:x", _light_old_pos.x, light_new_pos.x, 0.5, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR)
 	$Light2D/Tween.interpolate_property($Light2D, "position:y", _light_old_pos.y, light_new_pos.y, 0.5, Tween.TRANS_LINEAR, Tween.TRANS_LINEAR)
 	$Light2D/Tween.start()
@@ -136,7 +153,7 @@ func _take_damage(collision: KinematicCollision2D):
 	$SfxPain.pitch_scale = rng.randf_range(0.7, 1.3)
 	$SfxPain.play(0.0)	
 
-	health -= 5 + (randi() % 10)
+	health -= floor( (collision.collider.damage + (randi() % 5)) * collision.collider.factor)
 	if health <= 0:
 		get_tree().change_scene("res://core/game-over.tscn")	
 
@@ -145,3 +162,19 @@ func _take_damage(collision: KinematicCollision2D):
 
 	$Sprite.play("hit")
 	$"/root/Main/HUD/HealthBar".value = health	
+	$"/root/Main/HUD/HealthBar/AnimationPlayer".play("blink")
+
+func _heal(ammount: int, collision: KinematicCollision2D):
+	$SfxHeal.play(0.0)
+	collision.collider.queue_free()
+
+	print(ammount)
+	health = min(health + ammount, 100)
+
+	$"/root/Main/HUD/HealthBar".value = health	
+	$"/root/Main/HUD/HealthBar/AnimationPlayer".play("blink")
+	
+func add_gold(extragold: int):
+	globals.gold += extragold
+	$"/root/Main/HUD/GoldLabel".text = str(floor(globals.gold))
+	$"/root/Main/HUD/GoldLabel/AnimationPlayer".play("blink")

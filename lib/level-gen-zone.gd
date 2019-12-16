@@ -22,7 +22,6 @@ func _init(l: float, t: float, w: float, h: float, d: int):
 
 func _ready():
 	map = $"/root/Main/Map"
-	#print("New zone %s: left:%s, top:%s, width:%s, height:%s" % [depth, left, top, width, height])
 	if depth < map.MAX_DEPTH and width > 0 and height > 0:
 		var halfW = ceil(width / 2)
 		var halfH = ceil(height / 2)
@@ -35,7 +34,6 @@ func _ready():
 		else:
 			splitHori = rand_range(0, 100) > 50
  	
-		#print(" splitHori ===== ", splitHori)
 		if splitHori:
 			var offset = (height / 100.0) * map.SPLIT_PERC
 			var splitH = rng.randi_range(halfH - offset, halfH + offset)

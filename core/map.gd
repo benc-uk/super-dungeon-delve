@@ -12,6 +12,7 @@ var all_rooms: = []
 
 func _ready():
 	rng.randomize()
+	all_rooms.clear()
 	
 	# Generate the level
 	var top_zone = LevelGenZone.new(0, 0, MAP_SIZE, MAP_SIZE, 0) 
@@ -22,9 +23,35 @@ func _ready():
 	# Add pillars to each room, maybe
 	for room in all_rooms:
 		_add_pillars(room)
+		for mi in range(room.width * room.height):
+			# potions
+			if (randf() * 100) <= 1.0:
+				var thing = preload("res://entities/potion.tscn").instance()
+				var t_cell = get_random_floor_cell(room["left"], room["top"], room["width"], room["height"])
+				thing.position.x = t_cell.x * globals.GRID_SIZE
+				thing.position.y = t_cell.y * globals.GRID_SIZE
+				thing.add_to_group("potions")
+				add_child(thing)
+				
+			# Decorations
+			if (randf() * 100) <= 5.0:
+				var deco = Sprite.new()
+				var r: = randi() % 4
+				if r == 0: deco.texture = preload("res://assets/misc/deco/blood.png")
+				if r == 1: deco.texture = preload("res://assets/misc/deco/crack.png")
+				if r == 2: deco.texture = preload("res://assets/misc/deco/skull.png")
+				if r == 3: deco.texture = preload("res://assets/misc/deco/bones.png")
+				if randf() > 0.5: deco.flip_h = true
+				var m_cell = get_random_floor_cell(room["left"], room["top"], room["width"], room["height"])
+				deco.position.x = m_cell.x * globals.GRID_SIZE + 8
+				deco.position.y = m_cell.y * globals.GRID_SIZE + 8
+				deco.add_to_group("decos")
+				deco.self_modulate = self_modulate
+				add_child(deco)		
+	
+	# Lastly workout what wall tiles to use
 	_add_walls()
-
-
+	
 func fill_cells(left, top, width, height, tile_idx, tile_coords):
 	for y in range(top, top + height):
 		for x in range(left, left + width):
@@ -95,9 +122,9 @@ func _add_walls():
 					continue
 			
 func _add_torch(x, y):
-	var torch_node: Node2D = preload("res://entities/Torch.tscn").instance()
-	torch_node.position.x = x * $"/root/Main".GRID_SIZE
-	torch_node.position.y = y * $"/root/Main".GRID_SIZE
+	var torch_node: Node2D = preload("res://entities/torch.tscn").instance()
+	torch_node.position.x = x * globals.GRID_SIZE
+	torch_node.position.y = y * globals.GRID_SIZE
 	add_child(torch_node)
 
 func get_random_floor_cell(left, top, width, height):

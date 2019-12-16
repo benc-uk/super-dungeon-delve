@@ -1,11 +1,13 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://entities/torch.gd" type="Script" id=1]
-[ext_resource path="res://assets/sprites/torch_1.png" type="Texture" id=2]
-[ext_resource path="res://assets/sprites/torch_2.png" type="Texture" id=3]
-[ext_resource path="res://assets/sprites/torch_3.png" type="Texture" id=4]
-[ext_resource path="res://assets/sprites/torch_4.png" type="Texture" id=5]
-[ext_resource path="res://assets/misc/light.png" type="Texture" id=6]
+[ext_resource path="res://assets/misc/deco/torch_1.png" type="Texture" id=2]
+[ext_resource path="res://assets/misc/deco/torch_2.png" type="Texture" id=3]
+[ext_resource path="res://assets/misc/deco/torch_3.png" type="Texture" id=4]
+[ext_resource path="res://assets/misc/deco/torch_4.png" type="Texture" id=5]
+[ext_resource path="res://assets/efx/light.png" type="Texture" id=6]
+
+
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {

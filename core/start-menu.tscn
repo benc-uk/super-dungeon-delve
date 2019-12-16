@@ -1,9 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://core/main-menu.gd" type="Script" id=1]
-[ext_resource path="res://assets/splash/splash.png" type="Texture" id=2]
+[ext_resource path="res://assets/splash/title.png" type="Texture" id=2]
 [ext_resource path="res://resources/font.tres" type="DynamicFont" id=3]
-
+[ext_resource path="res://assets/sprites/player/knight_m_idle_anim_f1.png" type="Texture" id=4]
+[ext_resource path="res://assets/misc/coin.png" type="Texture" id=5]
+[ext_resource path="res://assets/misc/potion.png" type="Texture" id=6]
+[ext_resource path="res://assets/misc/chest.png" type="Texture" id=7]
 
 [sub_resource type="InputEventAction" id=1]
 action = "ui_accept"
@@ -16,23 +19,94 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
 
-[node name="splash" type="TextureRect" parent="."]
-margin_right = 1920.0
-margin_bottom = 1080.0
-rect_scale = Vector2( 0.536249, 0.560852 )
+[node name="title" type="Sprite" parent="."]
+position = Vector2( 0, -67 )
+scale = Vector2( 1.20669, 1.16475 )
 texture = ExtResource( 2 )
+centered = false
 
-[node name="StartButton" type="Button" parent="."]
+[node name="VersionLabel" type="Label" parent="."]
+light_mask = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 17.6962
+margin_top = -72.7595
+margin_right = 199.696
+margin_bottom = -7.75952
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 0.278431 )
+text = "v0.0.2"
+valign = 1
+max_lines_visible = 1
+
+[node name="StartBtn" type="Button" parent="."]
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -111.0
-margin_top = 187.0
-margin_right = 121.0
-margin_bottom = 253.0
+anchor_bottom = 1.0
+margin_left = -191.0
+margin_top = -388.0
+margin_right = 63.0
+margin_bottom = -317.0
+rect_scale = Vector2( 1.5, 1.5 )
 custom_fonts/font = ExtResource( 3 )
 shortcut = SubResource( 2 )
-text = "Enter!"
+text = "Start Game"
 flat = true
-[connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]
+align = 0
+
+[node name="OptionsBtn" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -191.0
+margin_top = -262.0
+margin_right = 41.0
+margin_bottom = -191.0
+rect_scale = Vector2( 1.5, 1.5 )
+custom_fonts/font = ExtResource( 3 )
+shortcut = SubResource( 2 )
+text = "Options"
+flat = true
+align = 0
+
+[node name="ControllsBtn" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -193.0
+margin_top = -142.0
+margin_right = 38.9999
+margin_bottom = -70.9999
+rect_scale = Vector2( 1.5, 1.5 )
+custom_fonts/font = ExtResource( 3 )
+shortcut = SubResource( 2 )
+text = "Controls"
+flat = true
+align = 0
+
+[node name="knight_m_idle_anim_f1" type="Sprite" parent="."]
+position = Vector2( 284.572, 718 )
+scale = Vector2( 16.5714, 16.5714 )
+texture = ExtResource( 4 )
+
+[node name="coin" type="Sprite" parent="."]
+position = Vector2( 1721.5, 757.5 )
+scale = Vector2( 13.6875, 13.6875 )
+texture = ExtResource( 5 )
+
+[node name="potion" type="Sprite" parent="."]
+position = Vector2( 1681.5, 917.5 )
+scale = Vector2( 13.6875, 13.6875 )
+texture = ExtResource( 6 )
+
+[node name="chest" type="Sprite" parent="."]
+position = Vector2( 1551, 818 )
+scale = Vector2( 11.125, 11.125 )
+texture = ExtResource( 7 )
+[connection signal="pressed" from="StartBtn" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="OptionsBtn" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="ControllsBtn" to="." method="_on_StartButton_pressed"]
