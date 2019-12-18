@@ -18,6 +18,6 @@ func _physics_process(delta):
 		var perc = (randf() * 100.0)
 		if perc < 1.5: 
 			speed = 80
-			_velocity = Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0))
-			_velocity = _velocity.normalized()
+			#_velocity = Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0))
+			_direction = Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0)).normalized()
 			move_time = 0.4

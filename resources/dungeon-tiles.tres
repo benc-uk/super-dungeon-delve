@@ -176,7 +176,7 @@ points = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
 0/shapes = [ {
 "autotile_coord": Vector2( 2, 0 ),
 "one_way": false,
-"one_way_margin": 1.0,
+"one_way_margin": 0.0,
 "shape": SubResource( 27 ),
 "shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
 }, {

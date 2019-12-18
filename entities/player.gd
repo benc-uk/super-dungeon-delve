@@ -8,6 +8,7 @@ var _last_dir: = Vector2(1.0, 0.0)
 var _recoil_time = 0.0
 var _recoil_dir = Vector2.ZERO
 var _attack_cooldown = 0.0
+var _step = true
 var rng: = RandomNumberGenerator.new()
 
 export var base_speed = Vector2(100, 100)
@@ -67,18 +68,9 @@ func _physics_process(delta: float):
 		var collision: = get_slide_collision(i)
 		if collision:
 			# Hit a monster
-			if collision.collider.get_filename().find("monster") > 0:
+			if collision.collider.is_in_group("monsters"):
+				collision.collider.set("time_since_hit_player", 0.0) 
 				_take_damage(collision)
-				
-			# Hit the exit
-			if collision.collider.get_filename().find("exit") > 0:
-				collision.collider.queue_free()
-				$"/root/Main".next_level()
-				
-			# Hit a potion
-			#print(collision.collider.get_groups())
-			if collision.collider.get_filename().find("potion") > 0:
-				_heal(10 + randi() % 10, collision)
 
 	# Light flicker		
 	$Light2D.texture_scale = light_size + (cos(_time * 9) * 0.005)
@@ -86,31 +78,7 @@ func _physics_process(delta: float):
 
 	# Attack
 	if Input.is_action_pressed("attack") and _attack_cooldown <= 0.001:
-		var weapon: = SCENE_WEAPON.instance()
-		
-		$SfxSwipe.pitch_scale = rng.randf_range(0.9, 1.8)
-		$SfxSwipe.play(0.0)
-		
-		if _last_dir.x > 0:
-			weapon.rot = 90
-			weapon.position.x = 8
-			weapon.position.y = 16
-		elif _last_dir.x < 0:
-			weapon.rot = -90
-			weapon.position.x = 8
-			weapon.position.y = 16
-		elif _last_dir.y > 0:
-			weapon.rot = 180
-			weapon.position.x = 8
-			weapon.position.y = 16
-			weapon.z_index = 11
-		elif _last_dir.y < 0:
-			weapon.rot = 0
-			weapon.position.x = 8
-			weapon.position.y = 12
-
-		add_child(weapon)
-		_attack_cooldown = attack_cooldown_time
+		_attack()
 
 func _get_direction() -> Vector2:
 	var new_dir: = Vector2(
@@ -134,8 +102,10 @@ func _get_direction() -> Vector2:
 	return new_dir
 
 func _on_Sprite_frame_changed():
+	_step = not _step
+	if not _step: return
 	if $Sprite.animation == "walk":
-		$SfxFootstep.volume_db = rng.randf_range(-10.0, 1.0)
+		$SfxFootstep.volume_db = rng.randf_range(-20.0, -10.0)
 		$SfxFootstep.pitch_scale = rng.randf_range(0.7, 1.3)
 		$SfxFootstep.play(0.0)
 
@@ -164,11 +134,7 @@ func _take_damage(collision: KinematicCollision2D):
 	$"/root/Main/HUD/HealthBar".value = health	
 	$"/root/Main/HUD/HealthBar/AnimationPlayer".play("blink")
 
-func _heal(ammount: int, collision: KinematicCollision2D):
-	$SfxHeal.play(0.0)
-	collision.collider.queue_free()
-
-	print(ammount)
+func heal(ammount: int):
 	health = min(health + ammount, 100)
 
 	$"/root/Main/HUD/HealthBar".value = health	
@@ -178,3 +144,31 @@ func add_gold(extragold: int):
 	globals.gold += extragold
 	$"/root/Main/HUD/GoldLabel".text = str(floor(globals.gold))
 	$"/root/Main/HUD/GoldLabel/AnimationPlayer".play("blink")
+
+func _attack():
+	var weapon: = SCENE_WEAPON.instance()
+	weapon.add_to_group("weapons")
+	
+	$SfxSwipe.pitch_scale = rng.randf_range(0.9, 1.8)
+	$SfxSwipe.play(0.0)
+	
+	if _last_dir.x > 0:
+		weapon.rot = 90
+		weapon.position.x = 8
+		weapon.position.y = 16
+	elif _last_dir.x < 0:
+		weapon.rot = -90
+		weapon.position.x = 8
+		weapon.position.y = 16
+	elif _last_dir.y > 0:
+		weapon.rot = 180
+		weapon.position.x = 8
+		weapon.position.y = 16
+		weapon.z_index = 11
+	elif _last_dir.y < 0:
+		weapon.rot = 0
+		weapon.position.x = 8
+		weapon.position.y = 12
+
+	add_child(weapon)
+	_attack_cooldown = attack_cooldown_time

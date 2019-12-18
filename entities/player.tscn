@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://entities/player.gd" type="Script" id=1]
 [ext_resource path="res://assets/sprites/player/knight_m_idle_anim_f0.png" type="Texture" id=2]
@@ -14,7 +14,6 @@
 [ext_resource path="res://assets/sfx/footstep.wav" type="AudioStream" id=12]
 [ext_resource path="res://assets/sfx/grunts.wav" type="AudioStream" id=13]
 [ext_resource path="res://assets/sfx/swipe.wav" type="AudioStream" id=14]
-[ext_resource path="res://assets/sfx/heal.wav" type="AudioStream" id=15]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 6, 7 )
@@ -34,7 +33,7 @@ animations = [ {
 "frames": [ ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ) ],
 "loop": true,
 "name": "walk",
-"speed": 5.0
+"speed": 7.0
 } ]
 
 [node name="Player" type="KinematicBody2D"]
@@ -55,7 +54,7 @@ position = Vector2( 8, 8 )
 z_index = 10
 frames = SubResource( 2 )
 animation = "idle"
-frame = 1
+frame = 2
 playing = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -96,8 +95,5 @@ stream = ExtResource( 13 )
 
 [node name="SfxSwipe" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 14 )
-
-[node name="SfxHeal" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 15 )
 [connection signal="frame_changed" from="Sprite" to="." method="_on_Sprite_frame_changed"]
 [connection signal="timeout" from="Light2D/LightTimer" to="." method="_on_LightTimer_timeout"]

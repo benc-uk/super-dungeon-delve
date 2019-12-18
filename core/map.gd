@@ -7,6 +7,10 @@ const TILE_IDX_UNSET = -1
 const TILE_IDX_WALL = 0
 const TILE_IDX_FLOOR = 1
 
+const SCENE_TORCH = preload("res://entities/torch.tscn")
+const SCENE_CHEST = preload("res://entities/chest.tscn")
+const SCENE_POTION = preload("res://entities/potion.tscn")
+
 var rng: = RandomNumberGenerator.new()
 var all_rooms: = []
 
@@ -24,14 +28,18 @@ func _ready():
 	for room in all_rooms:
 		_add_pillars(room)
 		for mi in range(room.width * room.height):
-			# potions
-			if (randf() * 100) <= 1.0:
-				var thing = preload("res://entities/potion.tscn").instance()
+			# potions & chests
+			if (randf() * 100) <= 0.6:
+				var thing
+				if (randf() * 100) < 50:
+					thing = SCENE_CHEST.instance()
+				else:
+					thing = SCENE_POTION.instance()
 				var t_cell = get_random_floor_cell(room["left"], room["top"], room["width"], room["height"])
 				thing.position.x = t_cell.x * globals.GRID_SIZE
 				thing.position.y = t_cell.y * globals.GRID_SIZE
-				thing.add_to_group("potions")
 				add_child(thing)
+				continue
 				
 			# Decorations
 			if (randf() * 100) <= 5.0:
@@ -52,6 +60,7 @@ func _ready():
 	# Lastly workout what wall tiles to use
 	_add_walls()
 	
+
 func fill_cells(left, top, width, height, tile_idx, tile_coords):
 	for y in range(top, top + height):
 		for x in range(left, left + width):
@@ -122,7 +131,7 @@ func _add_walls():
 					continue
 			
 func _add_torch(x, y):
-	var torch_node: Node2D = preload("res://entities/torch.tscn").instance()
+	var torch_node: = SCENE_TORCH.instance()
 	torch_node.position.x = x * globals.GRID_SIZE
 	torch_node.position.y = y * globals.GRID_SIZE
 	add_child(torch_node)

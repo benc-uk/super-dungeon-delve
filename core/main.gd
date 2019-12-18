@@ -1,18 +1,23 @@
 extends Node
 
+const SCENE_MONSTER = preload("res://entities/monster.tscn")
+const SCENE_EXIT = preload("res://entities/exit.tscn")
+const SCENE_PLAYER = preload("res://entities/player.tscn")
+const SCENE_MAP = preload("res://core/map.tscn")
+
 func _ready():
 	randomize()
-	globals.player = load("res://entities/player.tscn").instance()
+	globals.player = SCENE_PLAYER.instance()
 	add_child(globals.player)
 	start_level()
 	     
 
 func start_level():
 	if globals.depth > 1: 
-		remove_child($Map)
-		globals.map.queue_free()
+		if get_node_or_null("Map") != null: remove_child($Map)
+		if globals.map != null: globals.map.queue_free()
 		
-	globals.map = load("res://core/map.tscn").instance()
+	globals.map = SCENE_MAP.instance()
 	if globals.depth > 1:
 		var r = randi() % 8
 		if r == 0: globals.map.self_modulate = Color(1.0, 1.8, 1.0)
@@ -35,7 +40,7 @@ func start_level():
 	globals.player.position.x = player_cell.x * globals.GRID_SIZE
 	globals.player.position.y = player_cell.y * globals.GRID_SIZE
 
-	var exit = load("res://entities/exit.tscn").instance()
+	var exit = SCENE_EXIT.instance()
 	var exit_room = globals.map.all_rooms[randi() % len(globals.map.all_rooms)]
 	var exit_cell: = {"x": -1, "y": -1}
 	while true:
@@ -54,15 +59,15 @@ func start_level():
 				var monster: KinematicBody2D
 				var r: = randi() % 3
 				if r == 0:
-					monster = preload("res://entities/monster.tscn").instance()
+					monster = SCENE_MONSTER.instance()
 					monster.set_script(preload("res://entities/monster-skel.gd"))
-				if r == 1:
-					monster = preload("res://entities/monster.tscn").instance()
+				if r == 1: 
+					monster = SCENE_MONSTER.instance()
 					monster.set_script(preload("res://entities/monster-slime.gd"))
 				if r == 2:
-					monster = preload("res://entities/monster.tscn").instance()
+					monster = SCENE_MONSTER.instance()
 					monster.set_script(preload("res://entities/monster-goblin.gd"))
-				var m_cell = $Map.get_random_floor_cell(room["left"], room["top"], room["width"], room["height"])
+				var m_cell = globals.map.get_random_floor_cell(room["left"], room["top"], room["width"], room["height"])
 				monster.position.x = m_cell.x * globals.GRID_SIZE
 				monster.position.y = m_cell.y * globals.GRID_SIZE
 				
@@ -75,5 +80,7 @@ func start_level():
 				add_child(monster)
 				
 func next_level():
+	$SfxExit.play(0.0)
 	globals.depth += 1
-	start_level()
+	# Use call deffered to prevent "flushing queries" errors/warnings
+	call_deferred("start_level")

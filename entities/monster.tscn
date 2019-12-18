@@ -1,39 +1,38 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://entities/monster.gd" type="Script" id=1]
-[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f0.png" type="Texture" id=2]
-[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f1.png" type="Texture" id=3]
-[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f2.png" type="Texture" id=4]
-[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f3.png" type="Texture" id=5]
-[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f0.png" type="Texture" id=6]
-[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f1.png" type="Texture" id=7]
-[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f2.png" type="Texture" id=8]
-[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f3.png" type="Texture" id=9]
-[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f1.png" type="Texture" id=10]
-[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f2.png" type="Texture" id=11]
-[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f3.png" type="Texture" id=12]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f1.png" type="Texture" id=2]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f2.png" type="Texture" id=3]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f3.png" type="Texture" id=4]
+[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f0.png" type="Texture" id=5]
+[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f1.png" type="Texture" id=6]
+[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f2.png" type="Texture" id=7]
+[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f3.png" type="Texture" id=8]
+[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f0.png" type="Texture" id=9]
+[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f1.png" type="Texture" id=10]
+[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f2.png" type="Texture" id=11]
+[ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f3.png" type="Texture" id=12]
 [ext_resource path="res://assets/efx/4x4.png" type="Texture" id=13]
-[ext_resource path="res://assets/sfx/splat2.wav" type="AudioStream" id=14]
-[ext_resource path="res://assets/sfx/slurp.wav" type="AudioStream" id=15]
+[ext_resource path="res://assets/sfx/smack.wav" type="AudioStream" id=14]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7, 5 )
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "slime",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
 "loop": true,
 "name": "goblin",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ) ],
+"frames": [ ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ) ],
 "loop": true,
 "name": "skel",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ) ],
-"loop": true,
-"name": "slime",
 "speed": 5.0
 } ]
 
@@ -98,6 +97,7 @@ position = Vector2( 8, 8 )
 z_index = 3
 frames = SubResource( 2 )
 animation = "goblin"
+frame = 3
 playing = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -130,6 +130,10 @@ bus = "Reverb"
 
 [node name="SfxDeath" type="AudioStreamPlayer2D" parent="."]
 position = Vector2( 951.513, 520.097 )
-stream = ExtResource( 15 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2( 8, 8 )
+enabled = true
+cast_to = Vector2( 16, 16 )
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="finished" from="SfxDeath" to="." method="_on_SfxDeath_finished"]
