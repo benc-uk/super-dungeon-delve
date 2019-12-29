@@ -20,6 +20,8 @@ func _ready():
 	pass	
 
 func _physics_process(delta):
+	#if _dead: return
+	
 	time_since_hit_player += delta
 	var current_speed = speed
 	
@@ -34,54 +36,53 @@ func _physics_process(delta):
 	for i in get_slide_count():
 		var collision: = get_slide_collision(i)
 		if collision:
-			# If hit by weapon
-			if collision.collider.is_in_group("weapons"):
-				# and *not* recoiling - take damage
-				if _recoil_countdown < 0:
-					var player: Player = get_node("/root/Main/Player")
-					$Particles2D.one_shot = true
-					$Particles2D.emitting = true
-					$Particles2D.scale = Vector2(0.5, 0.5)
-					health -= player.weapon_damage / factor
-	
-					_direction = position - player.position 
-					_direction = _direction.normalized()
-					_recoil_countdown = RECOIL_TIME
-	
-					$SfxHit.pitch_scale = randf() + 0.8
-					$SfxHit.play(0.0)
-			# Player hit timer, used by some monsters
-			elif collision.collider.name == "Player":
-				_direction = _direction.bounce(collision.normal)
-			# Bounce off everything else
-			else:
-				_direction = _direction.bounce(collision.normal)
+			_direction = _direction.bounce(collision.normal)
 
 	if health <= 0 and not _dead:
+		# Disable effects and hitboxes
 		_dead = true
 		set_collision_mask_bit(1, false)
 		set_collision_layer_bit(2, false)
+		$Hitbox/CollisionShape2D.disabled = true		
 		speed = 0
+		
+		# Show hit particle effect
 		$Particles2D.one_shot = true
 		$Particles2D.emitting = true
 		$Particles2D.scale = Vector2(1.2, 1.2)
 		
 		# Start death anim
 		$AnimationPlayer.play("death")
-			
+		# Play death sound
 		$SfxDeath.pitch_scale = randf() + 0.5
 		$SfxDeath.play(0.0)
 		
+		# Notch up score
 		globals.player.add_gold(gold * factor)
 		globals.kills += 1
-		
-		# Stop coliding with player
-		set_collision_mask_bit(1, false)
 
-# When death anim completes, destroy/free the object
-func _on_AnimationPlayer_animation_finished(anim_name):
-	pass
-
+#
+# Finally remove when death sfx is done
+#
 func _on_SfxDeath_finished():
 	queue_free()		
 	
+#
+#
+#
+func _on_Hitbox_body_entered(body):
+	# When hit by weapon
+	if body.name == "Weapon":
+		# and *not* recoiling - take damage
+		if _recoil_countdown < 0:
+			$Particles2D.one_shot = true
+			$Particles2D.emitting = true
+			$Particles2D.scale = Vector2(0.5, 0.5)
+			health -= globals.player.weapon_damage / factor
+
+			_direction = position - globals.player.position 
+			_direction = _direction.normalized()
+			_recoil_countdown = RECOIL_TIME
+
+			$SfxHit.pitch_scale = randf() + 0.8
+			$SfxHit.play(0.0)

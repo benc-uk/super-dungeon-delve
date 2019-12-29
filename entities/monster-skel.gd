@@ -1,6 +1,7 @@
 extends Monster
 
 var move_time: = 0.0
+const SCENE_BONE = preload("res://entities/bone.tscn")
 
 func _ready():
 	$AnimatedSprite.animation = "skel"
@@ -21,3 +22,9 @@ func _physics_process(delta):
 			#_velocity = Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0))
 			_direction = Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0)).normalized()
 			move_time = 0.4
+			
+	if randf() * 100 < (0.60 * factor) and not _dead:
+		var bone = SCENE_BONE.instance()
+		bone.position.x = position.x + 8
+		bone.position.y = position.y + 8
+		globals.map.add_child(bone)

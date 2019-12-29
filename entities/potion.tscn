@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://entities/potion.gd" type="Script" id=1]
 [ext_resource path="res://assets/misc/potion.png" type="Texture" id=2]
@@ -22,21 +22,30 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 0.196078, 0.658824, 1, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="ParticlesMaterial" id=2]
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.892308 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="ParticlesMaterial" id=4]
 emission_shape = 2
 emission_box_extents = Vector3( 4, 4, 1 )
 flag_disable_z = true
 gravity = Vector3( 0, -40, 0 )
-angular_velocity = 0.0
+angular_velocity = 1.05
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 linear_accel = 15.91
 linear_accel_random = 0.21
 radial_accel = 9.09
 radial_accel_random = 0.38
-scale = 0.2
+scale = 0.08
+scale_random = 0.32
+color_ramp = SubResource( 3 )
 
-[sub_resource type="RectangleShape2D" id=3]
+[sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 3, 3 )
 
 [node name="Potion" type="Node2D"]
@@ -70,7 +79,7 @@ light_mask = 0
 position = Vector2( 8, 6 )
 lifetime = 0.5
 randomness = 0.31
-process_material = SubResource( 2 )
+process_material = SubResource( 4 )
 texture = ExtResource( 4 )
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -79,7 +88,7 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2( 8, 11 )
-shape = SubResource( 3 )
+shape = SubResource( 5 )
 
 [node name="Sfx" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 5 )

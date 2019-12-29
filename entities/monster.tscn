@@ -1,13 +1,13 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://entities/monster.gd" type="Script" id=1]
-[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f1.png" type="Texture" id=2]
-[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f2.png" type="Texture" id=3]
-[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f3.png" type="Texture" id=4]
-[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f0.png" type="Texture" id=5]
-[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f1.png" type="Texture" id=6]
-[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f2.png" type="Texture" id=7]
-[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f3.png" type="Texture" id=8]
+[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f0.png" type="Texture" id=2]
+[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f1.png" type="Texture" id=3]
+[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f2.png" type="Texture" id=4]
+[ext_resource path="res://assets/sprites/monsters/orc_warrior_run_anim_f3.png" type="Texture" id=5]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f1.png" type="Texture" id=6]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f2.png" type="Texture" id=7]
+[ext_resource path="res://assets/sprites/monsters/swampy_run_anim_f3.png" type="Texture" id=8]
 [ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f0.png" type="Texture" id=9]
 [ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f1.png" type="Texture" id=10]
 [ext_resource path="res://assets/sprites/monsters/skelet_run_anim_f2.png" type="Texture" id=11]
@@ -15,19 +15,20 @@
 [ext_resource path="res://assets/efx/4x4.png" type="Texture" id=13]
 [ext_resource path="res://assets/sfx/smack.wav" type="AudioStream" id=14]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 7, 5 )
+[sub_resource type="CapsuleShape2D" id=6]
+radius = 5.0
+height = 4.0
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ],
-"loop": true,
-"name": "slime",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "goblin",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "slime",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ) ],
@@ -81,15 +82,19 @@ scale = 0.2
 scale_random = 0.72
 color = Color( 0.6, 0.576471, 0.635294, 1 )
 
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 6, 7 )
+
 [node name="Monster" type="KinematicBody2D" groups=[
 "monsters",
 ]]
 collision_layer = 4
+collision_mask = 3
 script = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 8, 11 )
-shape = SubResource( 1 )
+position = Vector2( 8, 8 )
+shape = SubResource( 6 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 light_mask = 0
@@ -97,7 +102,7 @@ position = Vector2( 8, 8 )
 z_index = 3
 frames = SubResource( 2 )
 animation = "goblin"
-frame = 3
+frame = 2
 playing = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -118,7 +123,7 @@ process_material = SubResource( 4 )
 texture = ExtResource( 13 )
 
 [node name="VisibilityEnabler2D" type="VisibilityEnabler2D" parent="."]
-position = Vector2( -46, -44 )
+position = Vector2( -46, -47 )
 rect = Rect2( -10, -10, 128, 128 )
 pause_particles = false
 process_parent = true
@@ -126,6 +131,7 @@ physics_process_parent = true
 
 [node name="SfxHit" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 14 )
+volume_db = -3.0
 bus = "Reverb"
 
 [node name="SfxDeath" type="AudioStreamPlayer2D" parent="."]
@@ -135,5 +141,15 @@ position = Vector2( 951.513, 520.097 )
 position = Vector2( 8, 8 )
 enabled = true
 cast_to = Vector2( 16, 16 )
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+
+[node name="Hitbox" type="Area2D" parent="."]
+position = Vector2( -25, 2 )
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+modulate = Color( 0.388235, 0.905882, 0, 1 )
+position = Vector2( 33, 6 )
+shape = SubResource( 5 )
 [connection signal="finished" from="SfxDeath" to="." method="_on_SfxDeath_finished"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_Hitbox_body_entered"]

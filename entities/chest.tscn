@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://entities/chest.gd" type="Script" id=1]
 [ext_resource path="res://assets/misc/chest.png" type="Texture" id=2]
@@ -15,9 +15,31 @@ flag_disable_z = true
 gravity = Vector3( -100, -200, 0 )
 initial_velocity = 72.62
 initial_velocity_random = 1.0
-angular_velocity = 0.0
+angular_velocity = 39.5388
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
+
+[sub_resource type="Gradient" id=3]
+colors = PoolColorArray( 1, 0.667236, 0.09375, 1, 1, 0.960784, 0, 0.431373 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=5]
+emission_shape = 2
+emission_box_extents = Vector3( 7, 5, 0 )
+flag_disable_z = true
+spread = 90.0
+gravity = Vector3( 0, 20, 0 )
+angular_velocity = 1.05
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = -15.04
+linear_accel_random = 0.54
+tangential_accel = 23.81
+scale = 0.1
+scale_random = 0.4
+color_ramp = SubResource( 4 )
 
 [node name="Chest" type="Node2D"]
 script = ExtResource( 1 )
@@ -25,6 +47,7 @@ script = ExtResource( 1 )
 [node name="Sprite" type="Sprite" parent="."]
 light_mask = 0
 position = Vector2( 8, 8 )
+z_index = 1
 texture = ExtResource( 2 )
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -49,6 +72,16 @@ amount = 16
 lifetime = 0.6
 explosiveness = 0.41
 process_material = SubResource( 2 )
+texture = ExtResource( 4 )
+
+[node name="Particles2D-Anim" type="Particles2D" parent="."]
+light_mask = 0
+position = Vector2( 8, 6 )
+z_index = 1
+lifetime = 0.5
+speed_scale = 2.0
+randomness = 0.31
+process_material = SubResource( 5 )
 texture = ExtResource( 4 )
 [connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
 [connection signal="finished" from="Sfx" to="." method="_on_Sfx_finished"]

@@ -1,6 +1,10 @@
 extends Node
 class_name LevelGenZone
 
+# Random factor used when spliting zones
+# Percentange ammount to modulate the split offet
+const SPLIT_PERC = 30	  
+
 var left: float
 var top: float
 var width: float
@@ -8,7 +12,6 @@ var height: float
 var center: Vector2
 var depth: int
 var rng: = RandomNumberGenerator.new()
-var map: TileMap
 	
 func _init(l: float, t: float, w: float, h: float, d: int):
 	rng.randomize()
@@ -21,8 +24,7 @@ func _init(l: float, t: float, w: float, h: float, d: int):
 
 
 func _ready():
-	map = $"/root/Main/Map"
-	if depth < map.MAX_DEPTH and width > 0 and height > 0:
+	if depth < globals.map.MAX_DEPTH and width > 0 and height > 0:
 		var halfW = ceil(width / 2)
 		var halfH = ceil(height / 2)
 		
@@ -35,12 +37,12 @@ func _ready():
 			splitHori = rand_range(0, 100) > 50
  	
 		if splitHori:
-			var offset = (height / 100.0) * map.SPLIT_PERC
+			var offset = (height / 100.0) * SPLIT_PERC
 			var splitH = rng.randi_range(halfH - offset, halfH + offset)
 			add_child(get_script().new(left, top, width, splitH, depth + 1))
 			add_child(get_script().new(left, top + splitH, width, height - splitH, depth + 1))
 		else:
-			var offset = (width / 100.0) * map.SPLIT_PERC
+			var offset = (width / 100.0) * SPLIT_PERC
 			var splitW = rng.randi_range(halfW - offset, halfW + offset)
 			add_child(get_script().new(left, top, splitW, height, depth + 1))
 			add_child(get_script().new(left + splitW, top, width - splitW, height, depth + 1))
@@ -56,8 +58,8 @@ func _make_room():
 	#print(" New room %s: left:%s, top:%s, width:%s, height:%s" % [depth, roomX, roomY, roomWidth, roomHeight])
 	if roomWidth < 1 or roomWidth < 1:
 		return
-	map.fill_cells_floor(roomLeft, roomTop, roomWidth, roomHeight)
-	map.all_rooms.push_front({"left":roomLeft, "top":roomTop, "width":roomWidth, "height":roomHeight})
+	globals.map.fill_cells_floor(roomLeft, roomTop, roomWidth, roomHeight)
+	globals.map.all_rooms.push_front({"left":roomLeft, "top":roomTop, "width":roomWidth, "height":roomHeight})
 
 
 func make_corridor():
@@ -68,9 +70,9 @@ func make_corridor():
 		
 		# Work out direction
 		if a.center.x != b.center.x:
-			map.fill_cells_floor(a.center.x, a.center.y, b.center.x - a.center.x, 1)
+			globals.map.fill_cells_floor(a.center.x, a.center.y, b.center.x - a.center.x, 1)
 		if a.center.y != b.center.y:
-			map.fill_cells_floor(a.center.x, a.center.y, 1, b.center.y - a.center.y)
+			globals.map.fill_cells_floor(a.center.x, a.center.y, 1, b.center.y - a.center.y)
 
 		# Recurse down child zones
 		a.make_corridor()

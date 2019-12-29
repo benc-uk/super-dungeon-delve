@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://entities/player.gd" type="Script" id=1]
 [ext_resource path="res://assets/sprites/player/knight_m_idle_anim_f0.png" type="Texture" id=2]
@@ -15,10 +15,7 @@
 [ext_resource path="res://assets/sfx/grunts.wav" type="AudioStream" id=13]
 [ext_resource path="res://assets/sfx/swipe.wav" type="AudioStream" id=14]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 6, 7 )
-
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
@@ -36,25 +33,25 @@ animations = [ {
 "speed": 7.0
 } ]
 
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 4.44124
+height = 3.45922
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 4.85502, 7.0294 )
+
 [node name="Player" type="KinematicBody2D"]
 show_behind_parent = true
 collision_layer = 2
-collision_mask = 13
 script = ExtResource( 1 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-self_modulate = Color( 0.945098, 0.768627, 0.462745, 0.635294 )
-light_mask = 0
-position = Vector2( 8, 16 )
-shape = SubResource( 1 )
 
 [node name="Sprite" type="AnimatedSprite" parent="."]
 light_mask = 0
 position = Vector2( 8, 8 )
 z_index = 10
-frames = SubResource( 2 )
+frames = SubResource( 1 )
 animation = "idle"
-frame = 2
+frame = 1
 playing = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -85,6 +82,13 @@ autostart = true
 
 [node name="Tween" type="Tween" parent="Light2D"]
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+modulate = Color( 0.298039, 0.768627, 0.0588235, 1 )
+light_mask = 0
+position = Vector2( 7.92289, 15.694 )
+z_index = 12
+shape = SubResource( 4 )
+
 [node name="SfxFootstep" type="AudioStreamPlayer2D" parent="."]
 position = Vector2( 0, 1 )
 stream = ExtResource( 12 )
@@ -95,5 +99,17 @@ stream = ExtResource( 13 )
 
 [node name="SfxSwipe" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 14 )
+
+[node name="Hitbox" type="Area2D" parent="."]
+position = Vector2( 1.85062, 5.86031 )
+scale = Vector2( 1.26491, 1.18779 )
+z_index = 11
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2( 4.7368, 7.19185 )
+shape = SubResource( 3 )
 [connection signal="frame_changed" from="Sprite" to="." method="_on_Sprite_frame_changed"]
 [connection signal="timeout" from="Light2D/LightTimer" to="." method="_on_LightTimer_timeout"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_Hitbox_body_entered"]

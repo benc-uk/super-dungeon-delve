@@ -1,7 +1,7 @@
 extends Monster
 
 var _base_speed: = 0.0
-const RUN_AWAY_TIME = 0.8
+const RUN_AWAY_TIME = 0.7
 
 func _ready():
 	$AnimatedSprite.animation = "goblin"
@@ -34,6 +34,6 @@ func _physics_process(delta):
 		else:
 			# Else move in opposite direction fast
 			_direction =  $"CollisionShape2D".global_transform.get_origin() - $"/root/Main/Player/CollisionShape2D".global_transform.get_origin() 
-			speed = _base_speed * 3
+			speed = _base_speed * 2
 			
 		_direction = _direction.normalized()
