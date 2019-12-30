@@ -61,7 +61,7 @@ rect_scale = Vector2( 0.5, 0.5 )
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 1, 1, 1, 0.278431 )
-text = "v1.0.0"
+text = "v1.0.1"
 valign = 1
 max_lines_visible = 1
 
