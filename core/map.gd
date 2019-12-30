@@ -121,10 +121,12 @@ func _add_walls():
 			if get_cell(x, y) == TILE_IDX_UNSET:
 				# Specal 1 thickness walls - doesn't look that good
 				if get_cell(x-1, y) == TILE_IDX_FLOOR and get_cell(x+1, y) == TILE_IDX_FLOOR:
-					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(1, 1))
+					#set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(1, 1))
+					fill_cells_floor(x, y, 1, 1)
 					continue				
 				if get_cell(x, y-1) == TILE_IDX_FLOOR and get_cell(x, y+1) == TILE_IDX_FLOOR:
-					set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(2, 1))
+					#set_cell(x, y, TILE_IDX_WALL, false, false, false, Vector2(2, 1))
+					fill_cells_floor(x, y, 1, 1)
 					continue		
 									
 				# Cardinal directions
