@@ -11,6 +11,12 @@ var _selected = 0
 var _old_selected = 0
 	
 func _process(delta):
+	if Input.is_action_just_pressed("screenshot") and get_tree().paused == false:
+		var date = OS.get_datetime()
+		var image = get_viewport().get_texture().get_data()
+		image.flip_y()
+		image.save_png("screenshot_%s-%s-%s_%s-%s-%s.png" % [date.year, date.month, date.day, date.hour, date.minute, date.second])
+
 	# Dismiss pause screen if pause pressed, and game is paused
 	if Input.is_action_just_pressed("pause") and get_tree().paused == true:
 		hide()
