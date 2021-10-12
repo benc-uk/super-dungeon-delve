@@ -35,7 +35,7 @@ func _ready():
 			splitHori = true
 		else:
 			splitHori = rand_range(0, 100) > 50
- 	
+
 		if splitHori:
 			var offset = (height / 100.0) * SPLIT_PERC
 			var splitH = rng.randi_range(halfH - offset, halfH + offset)
